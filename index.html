@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>There will be works</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      padding: 100px; /* Add padding to ensure margin around the text */
+      box-sizing: border-box; /* Include padding in the element's total width and height */
+    }
+    h1 {
+      font-size: 16vw; /* Responsive font size */
+      color: transparent;
+      -webkit-text-stroke: 0.5px black;
+      text-align: center;
+      display: none; /* Initially hide the text */
+      margin: 0; /* Remove default margin */
+    }
+    #coordinates {
+      position: fixed;
+      bottom: 20px;
+      font-size: 1em;
+      margin-top: 50px;
+      white-space: nowrap; /* Prevent text from wrapping */
+      overflow: hidden; /* Hide overflow text */
+      text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    }
+    #target1 {
+      font-size: 1em;
+      margin-top: 20px;
+      white-space: nowrap; /* Prevent text from wrapping */
+      overflow: hidden; /* Hide overflow text */
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="message">Follow the coordinates to reach the target location in range.</h1>
+  <div id="target1">25.054617999204893, 121.51873566781988</div>
+  <div id="coordinates">N/A</div>
+
+  <script>
+    const targets = [
+      { latitude: 25.054617999204893, longitude: 121.51873566781988, message: 'There should be a work.' },
+      { latitude: 25.053129564646287, longitude: 121.52107905291801, message: 'There may have a work.' },
+      { latitude: 25.051985738512794, longitude: 121.52107905291801, message: 'There could be a work' },
+      { latitude: 25.057500352102065, longitude: 121.56949563667358, message: 'The works might be not artwork.' },
+      { latitude: 25.058500352102065, longitude: 121.57049563667358, message: 'There might be no works.' }
+    ];
+    const rangeInMeters = 111; // Range in meters
+
+    function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000; // Radius of the Earth in meters
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c; // Distance in meters
+      return distance;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          console.log('Current position:', { latitude, longitude });
+
+          // Update coordinates display
+          document.getElementById('coordinates').textContent = `${latitude.toFixed(6)} , ${longitude.toFixed(6)}`;
+
+          // Check if within range of any target and display message
+          let message = 'Follow the coordinates to reach the target location in range.';
+          let foundTarget = false;
+          for (const target of targets) {
+            const distance = getDistanceFromLatLonInMeters(latitude, longitude, target.latitude, target.longitude);
+            console.log(`Distance to ${target.message}: ${distance} meters`);
+            if (distance <= rangeInMeters) {
+              message = target.message;
+              foundTarget = true;
+              break;
+            }
+          }
+          if (!foundTarget) {
+            console.log('No target found within range.');
+          }
+          document.getElementById('message').textContent = message;
+          document.getElementById('message').style.display = 'block';
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          if (error.code === 3) {
+            alert('Position acquisition timed out. Please try again.');
+          }
+        },
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 3000 } // Increased timeout to 10 seconds
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  </script>
+</body>
+</html>
