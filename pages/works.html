@@ -1,10 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Works</title>
+    <title>There Might be No Works</title>
     <style>
+        #works-title h1 {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            margin-bottom: 20px;
+            color: transparent;
+            -webkit-text-stroke: 0.5px black;
+            text-decoration: line-through;
+        }
+
         .card-container {
             display: flex;
             flex-direction: column;
@@ -12,32 +25,40 @@
             gap: 20px;
             padding: 20px;
         }
+
         .card {
             width: 100%;
             max-width: 600px;
-            border: 1px solid #ccc;
+            border: 0px solid #ccc;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             background-color: #fff;
         }
+
         .card img {
             width: 100%;
             height: auto;
         }
+
         .card-body {
             padding: 20px;
         }
+
         .card-description {
-            white-space: pre-wrap; /* Preserve newlines */
+            white-space: pre-wrap;
+            /* Preserve newlines */
         }
     </style>
 </head>
+
 <body>
     <div class="card-container" id="card-container"></div>
 
+    <h1 id="works-title" class="display-1">There Might be No Works</h1>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             fetch('https://293751c156f8.ngrok.app/items/works')
                 .then(response => response.json())
                 .then(data => {
@@ -47,11 +68,24 @@
                         card.className = 'card';
 
                         const img = document.createElement('img');
-                        img.src = `http://35.201.132.32:8055/assets/${item.photo}`;
+                        img.src = `https://293751c156f8.ngrok.app/${item.photo}`;
                         img.alt = 'Work Photo';
 
                         const cardBody = document.createElement('div');
                         cardBody.className = 'card-body';
+
+                        const title = document.createElement('h5');
+                        title.className = 'card-title';
+                        title.textContent = 'unknown';
+
+                        const year = document.createElement('h5');
+                        year.className = 'card-year';
+                        year.textContent = '2024';
+
+                        const material = document.createElement('h5');
+                        material.className = 'card-material';
+                        material.textContent = 'Mixed Media';
+
 
                         const description = document.createElement('p');
                         description.className = 'card-description';
@@ -59,6 +93,9 @@
 
                         cardBody.appendChild(description);
                         card.appendChild(img);
+                        card.appendChild(title);
+                        card.appendChild(year);
+                        card.appendChild(material);
                         card.appendChild(cardBody);
                         container.appendChild(card);
                     });
@@ -67,4 +104,5 @@
         });
     </script>
 </body>
+
 </html>
