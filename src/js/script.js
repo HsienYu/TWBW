@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.append('photo', photoBlob, 'photo.jpg');
 
-                fetch('YOUR_BACKEND_URL', {
+                fetch('https://acda-36-225-67-22.ngrok-free.app/upload', {
                     method: 'POST',
                     body: formData
                 })
@@ -81,13 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let photoBlob = null;
 
         const targets = [
-            { latitude: 25.054617999204893, longitude: 121.51873566781988, message: 'There should be a work. If you have seen it, pls. take and upload the photo.' },
-            { latitude: 25.053129564646287, longitude: 121.52107905291801, message: 'There may have a work. If you have seen it, pls. take and upload the photo.' },
-            { latitude: 25.051985738512794, longitude: 121.52107905291801, message: 'There could be a work. If you have seen it, pls. take and upload the photo.' },
-            { latitude: 25.057500352102065, longitude: 121.56949563667358, message: 'The works might be not artwork. If you have seen it, pls. take and upload the photo.' },
-            { latitude: 25.058500352102065, longitude: 121.57049563667358, message: 'There might be no works. If you have seen it, pls. take and upload the photo.' }
+            { latitude: 25.054656876401825, longitude: 121.51881076967368, message: 'There should be a work. If you have seen it, pls. take and upload the photo. or go to next coordinations 25.053602945629322 , 121.519501592617' },
+            { latitude: 25.053610270447848, longitude: 121.519501592617, message: 'There may have a work. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.05112201470363, longitude: 121.52145852057377, message: 'There could be a work. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.055468618506882, longitude: 121.52167848541225, message: 'The works might be not artwork. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.056763758169904, longitude: 121.51925175121426, message: 'There might be no works. If you have seen it, pls. take and upload the photo.' }
         ];
-        const rangeInMeters = 111;
+        const rangeInMeters = 30;
 
         function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
             const R = 6371000;
@@ -107,12 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('taipei-time').textContent = `${taipeiTime}`;
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+                    // const latitude = position.coords.latitude;
+                    // const longitude = position.coords.longitude;
 
                     // For testing purposes, use fixed coordinates
-                    // const latitude = 25.054617999204893;
-                    // const longitude = 121.51873566781988;
+                    const latitude = 25.054656876401825;
+                    const longitude = 121.51881076967368;
 
                     console.log('Current position:', { latitude, longitude });
 
