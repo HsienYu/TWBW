@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.append('photo', photoBlob, 'photo.jpg');
 
-                fetch('https://acda-36-225-67-22.ngrok-free.app/upload', {
+                document.getElementById('uploading-indicator').style.display = 'block';
+
+
+                fetch('https://4abb-35-201-132-32.ngrok-free.app/upload', {
                     method: 'POST',
                     body: formData
                 })
@@ -74,6 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     .catch((error) => {
                         console.error('Error:', error);
                         alert('Failed to upload photo.');
+                    })
+                    .finally(() => {
+                        // Hide the uploading indicator
+                        document.getElementById('uploading-indicator').style.display = 'none';
                     });
             }
         }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Works</title>
+    <style>
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-description {
+            white-space: pre-wrap; /* Preserve newlines */
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container" id="card-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('http://35.201.132.32:8055/items/works')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('card-container');
+                    data.data.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+
+                        const img = document.createElement('img');
+                        img.src = `http://35.201.132.32:8055/assets/${item.photo}`;
+                        img.alt = 'Work Photo';
+
+                        const cardBody = document.createElement('div');
+                        cardBody.className = 'card-body';
+
+                        const description = document.createElement('p');
+                        description.className = 'card-description';
+                        description.textContent = item.description;
+
+                        cardBody.appendChild(description);
+                        card.appendChild(img);
+                        card.appendChild(cardBody);
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>

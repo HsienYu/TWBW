@@ -123,6 +123,20 @@ video {
   z-index: 9999;
 }
 
+#uploading-indicator {
+  display: none; /* Initially hidden */
+  position: fixed; /* Fixed position to cover the entire screen */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for centering */
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  color: white; /* White text */
+  padding: 20px; /* Some padding */
+  border-radius: 10px; /* Rounded corners */
+  font-size: 1.5em; /* Larger text */
+  z-index: 1000; /* Ensure it is on top of other elements */
+}
+
 /* Responsive Styles */
 @media (max-width: 576px) {
   #landing-page h1 {
