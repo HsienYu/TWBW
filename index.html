@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThereWillBeWorks</title>
+  <title>There Will Be Works</title>
   <!-- Favicon -->
   <link rel="icon" href="./src/assets/favicon.ico" type="image/x-icon">
   <!-- Bootstrap CSS -->
@@ -15,18 +15,56 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    function isMobileDevice() {
+      return /Mobi|Android/i.test(navigator.userAgent);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!isMobileDevice()) {
+        document.body.innerHTML = '<div class="container text-center"><h1 class="display-4">This work is only available for mobile devices.</h1></div>';
+      } else {
+        document.getElementById('start-button').addEventListener('click', function () {
+          document.getElementById('landing-page').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+        });
+      }
+    });
+
+  </script>
 </head>
 
 <body>
-  <div id="flash"></div>
-  <div id="message-container" class="container text-center">
-    <h1 id="message" class="display-4">Follow the coordinates to reach the target location in range.</h1>
-    <div id="coordinates" class="lead">N/A</div>
-    <div id="video-container" class="my-3">
-      <video id="video" autoplay playsinline muted class="img-fluid"></video>
+  <div id="landing-page" class="container text-center">
+    <h1 class="display-1">There Will Be Works</h1>
+    <div class="container text-left">
+      <h2>Instructions</h2>
+      <div class="lead">
+        <p class="instruction">Follow the GPS coordinates to reach the first location.</p>
+        <p class="instruction">When reaching the target location in range, you will receive further instructions.</p>
+        <p class="instruction">You will need to take a photo of the target location to proceed.</p>
+        <p class="instruction">The photo will be the work you think it's a work.</p>
+        <p class="instruction">The target coordinates will be updated every 2 weeks until the end of the exhibition.</p>
+        <p class="instruction">Complete the instruction to proceed to the next location.</p>
+        <p class="instruction">You will see the work via the redirect web page.</p>
+        <p class="instruction">This work is only available for mobile devices and make sure device allow service of location and camera.</p>
+      </div>
+      <button id="start-button" class="btn btn-primary">Start</button>
     </div>
-    <button id="upload-button" class="btn btn-primary">Take a Photo</button>
-    <script src="./src/js/script.js"></script>
+  </div>
+  <div id="main-content" class="container text-center" style="display: none;">
+    <div id="flash"></div>
+    <div id="message-container" class="container text-center">
+      <div id="taipei-time" class="lead">N/A</div>
+      <h1 id="message" class="display-4">Follow the coordinates to reach the target location in range.</h1>
+      <div id="distance" class="lead">N/A</div>
+      <div id="coordinates" class="lead">N/A</div>
+      <div id="video-container" class="my-3">
+        <video id="video" autoplay playsinline muted class="img-fluid"></video>
+      </div>
+      <button id="upload-button" class="btn btn-primary">Take a Photo</button>
+      <script src="./src/js/script.js"></script>
+    </div>
   </div>
 </body>
 
