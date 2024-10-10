@@ -10,9 +10,7 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
             font-size: 6rem;
-            margin-bottom: 20px;
             color: transparent;
             -webkit-text-stroke: 0.5px black;
             text-decoration: line-through;
@@ -68,8 +66,9 @@
                         card.className = 'card';
 
                         const img = document.createElement('img');
-                        img.src = `https://293751c156f8.ngrok.app/${item.photo}`;
-                        img.alt = 'Work Photo';
+                        console.log(item.photo);
+                        img.src = `https://293751c156f8.ngrok.app/assets/${item.photo}`;
+                        img.alt = 'Work image';
 
                         const cardBody = document.createElement('div');
                         cardBody.className = 'card-body';
