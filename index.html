@@ -41,6 +41,17 @@
       text-overflow: ellipsis;
     }
   </style>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android/i.test(navigator.userAgent);
+      }
+  
+      document.addEventListener('DOMContentLoaded', () => {
+        if (!isMobileDevice()) {
+          document.body.innerHTML = '<div id="non-mobile-message">This site is only accessible on mobile devices.</div>';
+        }
+      });
+    </script>
 </head>
 <body>
   <h1 id="message">Follow the coordinates to reach the target location in range.</h1>
