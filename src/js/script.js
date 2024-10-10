@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('uploading-indicator').style.display = 'block';
 
 
-                fetch('https://4abb-35-201-132-32.ngrok-free.app/upload', {
+                fetch('https://9f921d9def92.ngrok.app/upload', {
                     method: 'POST',
                     body: formData
                 })
