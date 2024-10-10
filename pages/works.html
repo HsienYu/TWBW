@@ -6,14 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>There Might be No Works</title>
     <style>
-        #works-title h1 {
+        #works-title {
             position: fixed;
-            top: 50%;
+            top: 40%;
             left: 50%;
-            font-size: 6rem;
+            transform: translate(-50%, -50%);
+            text-align: center;
             color: transparent;
-            -webkit-text-stroke: 0.5px black;
             text-decoration: line-through;
+            font-size: 10em;
+            -webkit-text-stroke: 0.5px black;
         }
 
         .card-container {
@@ -27,9 +29,9 @@
         .card {
             width: 100%;
             max-width: 600px;
-            border: 0px solid #ccc;
+            border: 1px solid #c7c7c7;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
             overflow: hidden;
             background-color: #fff;
         }
@@ -41,6 +43,21 @@
 
         .card-body {
             padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .card-year {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .card-material {
+            font-size: 1rem;
+            font-weight: bold;
         }
 
         .card-description {
@@ -90,11 +107,11 @@
                         description.className = 'card-description';
                         description.textContent = item.description;
 
+                        cardBody.appendChild(title);
+                        cardBody.appendChild(year);
+                        cardBody.appendChild(material);
                         cardBody.appendChild(description);
                         card.appendChild(img);
-                        card.appendChild(title);
-                        card.appendChild(year);
-                        card.appendChild(material);
                         card.appendChild(cardBody);
                         container.appendChild(card);
                     });
