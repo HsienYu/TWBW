@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" href="../src/assets/favicon.ico" type="image/x-icon">
     <title>There Might be No Works</title>
     <style>
         #works-title {
@@ -81,7 +83,7 @@
 
                     // Sort data in descending order based on date_created
                     data.data.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
-                    
+
                     data.data.forEach(item => {
                         const card = document.createElement('div');
                         card.className = 'card';
