@@ -90,13 +90,21 @@ document.addEventListener('DOMContentLoaded', () => {
         let photoBlob = null;
 
         const targets = [
-            { latitude: 25.054656876401825, longitude: 121.51881076967368, message: 'There should be a work. If you have seen it, pls. take and upload the photo. or go to next coordinations 25.053602945629322 , 121.519501592617' },
+            { latitude: 25.054656876401825, longitude: 121.51881076967368, message: 'There should be a work. If you have seen it, pls. take and upload the photo.' },
             { latitude: 25.053610270447848, longitude: 121.519501592617, message: 'There may have a work. If you have seen it, pls. take and upload the photo.' },
             { latitude: 25.05112201470363, longitude: 121.52145852057377, message: 'There could be a work. If you have seen it, pls. take and upload the photo.' },
             { latitude: 25.055468618506882, longitude: 121.52167848541225, message: 'The works might be not artwork. If you have seen it, pls. take and upload the photo.' },
             { latitude: 25.056763758169904, longitude: 121.51925175121426, message: 'There might be no works. If you have seen it, pls. take and upload the photo.' }
         ];
         const rangeInMeters = 30;
+
+        function getRandomTarget(targets) {
+            const randomIndex = Math.floor(Math.random() * targets.length);
+            return targets[randomIndex];
+        }
+
+        // Get a random target
+        const randomTarget = getRandomTarget(targets);
 
         function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
             const R = 6371000;
@@ -111,9 +119,32 @@ document.addEventListener('DOMContentLoaded', () => {
             return distance;
         }
 
+        // function isIOS() {
+        //     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        // }
+
+        // function isAndroid() {
+        //     return /Android/i.test(navigator.userAgent);
+        // }
+
         function updatePosition() {
             const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
             document.getElementById('taipei-time').textContent = `${taipeiTime}`;
+            // if (!navigator.geolocation) {
+            //     console.error('Geolocation is not supported by your browser');
+            //     let instructionsUrl = '';
+            //     if (isIOS()) {
+            //         instructionsUrl = 'https://support.apple.com/zh-tw/102647';
+            //     } else if (isAndroid()) {
+            //         instructionsUrl = 'https://support.google.com/accounts/answer/3467281?hl=zh-Hant';
+            //     } else {
+            //         console.error('Unsupported device');
+            //         return;
+            //     }
+            //     const instructionsMessage = `GPS is not enabled. Please follow the instructions <a href="${instructionsUrl}" target="_blank">here</a> to enable GPS.`;
+            //     document.getElementById('gps-instructions').innerHTML = instructionsMessage;
+            //     document.getElementById('gps-instructions').style.display = 'block';
+            // }
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const latitude = position.coords.latitude;
@@ -127,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     document.getElementById('coordinates').textContent = `${latitude} , ${longitude}`;
 
-                    let message = `Follow the coordinates ${targets[0].latitude} , ${targets[0].longitude} to reach the target location in range.`;
+                    let message = `Follow the coordinates ${randomTarget.latitude} , ${randomTarget.longitude} to reach the target location in range.`;
                     let foundTarget = false;
                     for (const target of targets) {
                         const distance = getDistanceFromLatLonInMeters(latitude, longitude, target.latitude, target.longitude);
