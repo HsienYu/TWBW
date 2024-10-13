@@ -1,1 +1,3 @@
-document.location = "https:" + window.location.href.substring(window.location.protocol.length, window.location.href.length);
+if (window.location.protocol === 'http:') {
+    window.location.href = window.location.href.replace('http:', 'https:');
+}
