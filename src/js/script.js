@@ -119,32 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return distance;
         }
 
-        // function isIOS() {
-        //     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        // }
-
-        // function isAndroid() {
-        //     return /Android/i.test(navigator.userAgent);
-        // }
-
         function updatePosition() {
+            redirectToSettings();
             const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
             document.getElementById('taipei-time').textContent = `${taipeiTime}`;
-            // if (!navigator.geolocation) {
-            //     console.error('Geolocation is not supported by your browser');
-            //     let instructionsUrl = '';
-            //     if (isIOS()) {
-            //         instructionsUrl = 'https://support.apple.com/zh-tw/102647';
-            //     } else if (isAndroid()) {
-            //         instructionsUrl = 'https://support.google.com/accounts/answer/3467281?hl=zh-Hant';
-            //     } else {
-            //         console.error('Unsupported device');
-            //         return;
-            //     }
-            //     const instructionsMessage = `GPS is not enabled. Please follow the instructions <a href="${instructionsUrl}" target="_blank">here</a> to enable GPS.`;
-            //     document.getElementById('gps-instructions').innerHTML = instructionsMessage;
-            //     document.getElementById('gps-instructions').style.display = 'block';
-            // }
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const latitude = position.coords.latitude;
