@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function updatePosition() {
-            redirectToSettings();
             const taipeiTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" });
             document.getElementById('taipei-time').textContent = `${taipeiTime}`;
             navigator.geolocation.getCurrentPosition(
