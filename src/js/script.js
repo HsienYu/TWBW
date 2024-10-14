@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch((error) => {
                     console.error('Error accessing camera:', error);
-                    alter('Failed to access camera.Please try again. or check if the camera permission is granted.');
+                    alert('Failed to access camera. Please try again or check if the camera permission is granted.');
                 });
         }
 
