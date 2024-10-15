@@ -66,6 +66,23 @@
             white-space: pre-wrap;
             /* Preserve newlines */
         }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 99999;
+        }
+
+        .back-button:hover {
+            background-color: #202020;
+        }
     </style>
 </head>
 
@@ -121,6 +138,12 @@
                         card.appendChild(cardBody);
                         container.appendChild(card);
                     });
+                    // Create and append the back button
+                    const backButton = document.createElement('a');
+                    backButton.href = 'https://therewillbeworks.com';
+                    backButton.className = 'back-button';
+                    backButton.textContent = 'Go Back';
+                    container.appendChild(backButton);
                 })
                 .catch(error => console.error('Error fetching data:', error));
         });

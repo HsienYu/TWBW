@@ -22,6 +22,7 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Custom JS -->
   <script>
     function isMobileDevice() {
       return /Mobi|Android/i.test(navigator.userAgent);
@@ -35,6 +36,10 @@
           document.getElementById('landing-page').style.display = 'none';
           document.getElementById('main-content').style.display = 'block';
         });
+        document.getElementById('switch-language').addEventListener('click', function () {
+          document.body.classList.toggle('zh-tw');
+          this.textContent = document.body.classList.contains('zh-tw') ? 'English' : '繁體中文';
+        });
       }
     });
 
@@ -47,17 +52,32 @@
     <div class="container text-left">
       <h2>Instructions</h2>
       <div class="lead">
-        <p class="instruction"> Make sure device allow and enable location services.</p>
-        <p class="instruction">Follow the GPS coordinates to reach the first location.</p>
-        <p class="instruction">When reaching the target location in range, you will receive further instructions.</p>
-        <p class="instruction">You will need to take a photo of the target location to proceed.</p>
-        <p class="instruction">The photo will be the work you think it's a work.</p>
-        <p class="instruction">The target coordinates will be updated every 2 weeks until the end of the exhibition.</p>
-        <p class="instruction">Complete the instruction to proceed to the next location.</p>
-        <p class="instruction">You will see the work via the redirect web page.</p>
-        <p class="instruction">This work is only available for mobile devices</p>
+        <div class="instruction-en">
+          <p>Make sure device allow and enable location services.</p>
+          <p>Follow the GPS coordinates to reach the first location.</p>
+          <p>When reaching the target location in range, you will receive further instructions.</p>
+          <p>You will need to take a photo of the target location to proceed.</p>
+          <p>The photo will be the work you think it's a work.</p>
+          <p>The target coordinates will be updated every 2 weeks until the end of the exhibition.</p>
+          <p>Complete the instruction to proceed to the next location.</p>
+          <p>You will see the work via the redirect web page.</p>
+          <p>This work is only available for mobile devices</p>
+        </div>
+        <div class="instruction-zh">
+          <p>確保設備允許並啟用定位服務。</p>
+          <p>按照GPS坐標到達第一個位置。</p>
+          <p>到達目標位置後，您將收到進一步的指示。</p>
+          <p>您需要拍攝目標位置的照片以繼續。</p>
+          <p>照片將是您認為是作品的作品。</p>
+          <p>目標坐標將每兩週更新一次，直到展覽結束。</p>
+          <p>完成指示以繼續到下一個位置。</p>
+          <p>您將通過重定向網頁看到作品。</p>
+          <p>此作品僅適用於行動裝置設備</p>
+        </div>
       </div>
       <button id="start-button" class="btn btn-primary">Start</button>
+      <button id="switch-language" class="btn btn-primary">繁體中文</button>
+
     </div>
   </div>
   <div id="main-content" class="container text-center" style="display: none;">

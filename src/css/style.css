@@ -16,7 +16,7 @@ html {
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
 #landing-page h1 {
@@ -130,6 +130,18 @@ video {
   margin-top: 20px;
   color: red;
 }
+
+.zh-tw .instruction-en {
+  display: none;
+}
+.zh-tw .instruction-zh {
+  display: block;
+}
+.instruction-zh {
+  display: none;
+}
+
+
 
 #uploading-indicator {
   display: none; /* Initially hidden */

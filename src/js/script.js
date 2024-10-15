@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log('Success:', data);
                         alert('Photo uploaded successfully!');
                         window.location.href = 'https://therewillbeworks.com/pages/works.html';
-
                     })
                     .catch((error) => {
                         console.error('Error:', error);
