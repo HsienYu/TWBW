@@ -145,7 +145,7 @@ video {
 .instruction-en,
 .instruction-zh {
   width: 100%;
-  text-align: center;
+  text-align: left;
 }
 
 .zh-tw .instruction-en {
