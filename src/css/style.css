@@ -153,6 +153,7 @@ video {
 }
 .zh-tw .instruction-zh {
   display: block;
+  line-height: normal;
 }
 .instruction-zh {
   display: none;
