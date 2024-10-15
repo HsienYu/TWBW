@@ -139,7 +139,6 @@ video {
   margin-bottom: 20px;
   min-width: 400px;
   width: 100%; /* Ensure the container takes full width */
-  max-width: 600px; /* Set a maximum width */
 }
 
 .zh-tw .instruction-en,
