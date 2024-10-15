@@ -131,6 +131,25 @@ video {
   color: red;
 }
 
+#instruction-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  min-width: 400px;
+  width: 100%; /* Ensure the container takes full width */
+  max-width: 600px; /* Set a maximum width */
+}
+
+.zh-tw .instruction-en,
+.zh-tw .instruction-zh,
+.instruction-en,
+.instruction-zh {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .zh-tw .instruction-en {
   display: none;
 }
