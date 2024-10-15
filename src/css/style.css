@@ -137,7 +137,6 @@ video {
   align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  min-width: 400px;
   width: 100%; /* Ensure the container takes full width */
 }
 
@@ -146,7 +145,7 @@ video {
 .instruction-en,
 .instruction-zh {
   width: 100%;
-  box-sizing: border-box;
+  text-align: center;
 }
 
 .zh-tw .instruction-en {
