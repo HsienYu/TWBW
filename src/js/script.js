@@ -93,7 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
             { latitude: 25.053610270447848, longitude: 121.519501592617, message: 'There may have a work. If you have seen it, pls. take and upload the photo.' },
             { latitude: 25.05112201470363, longitude: 121.52145852057377, message: 'There could be a work. If you have seen it, pls. take and upload the photo.' },
             { latitude: 25.055468618506882, longitude: 121.52167848541225, message: 'The works might be not artwork. If you have seen it, pls. take and upload the photo.' },
-            { latitude: 25.056763758169904, longitude: 121.51925175121426, message: 'There might be no works. If you have seen it, pls. take and upload the photo.' }
+            { latitude: 25.056763758169904, longitude: 121.51925175121426, message: 'There might be no works. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.059300864105335, longitude: 121.5206885230802, message: 'There could be work. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.057136937711785, longitude: 121.52020752372813, message: 'There might be work. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.057813858365396, longitude: 121.51913946120331, message: 'There was a work. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.053125279064247, longitude: 121.52490692010204, message: 'There might be no work. If you have seen it, pls. take and upload the photo.' },
+            { latitude: 25.053076681951502, longitude: 121.52672545782569, message: 'There could be work. If you have seen it, pls. take and upload the photo.' },
         ];
         const rangeInMeters = 30;
 
