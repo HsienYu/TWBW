@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let message = `Follow the coordinates ${randomTarget.latitude} , ${randomTarget.longitude} to reach the target location in range.`;
                     let foundTarget = false;
                     for (const target of targets) {
-                        const distance = getDistanceFromLatLonInMeters(latitude, longitude, target.latitude, target.longitude);
+                        const distance = getDistanceFromLatLonInMeters(latitude, longitude, randomTarget.latitude, randomTarget.longitude);
                         console.log(`Distance to ${target.message}: ${distance} meters`);
                         document.getElementById('distance').textContent = `${distance.toFixed(1)} meters`;
                         if (distance <= rangeInMeters) {
