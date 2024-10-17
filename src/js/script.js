@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (isMobileDevice()) {
+
+        //define global variables
+        var currentLat = 0;
+        var currentLng = 0;
+
+
         function openCamera() {
             const constraints = {
                 video: { facingMode: "environment" }
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (photoBlob) {
                 const formData = new FormData();
                 formData.append('photo', photoBlob, 'photo.jpg');
+                formData.append('coordinates', `${currentLat}, ${currentLng}`);
 
                 document.getElementById('uploading-indicator').style.display = 'block';
 
@@ -128,12 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('taipei-time').textContent = `${taipeiTime}`;
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+                    // const latitude = position.coords.latitude;
+                    // const longitude = position.coords.longitude;
 
                     // For testing purposes, use fixed coordinates
-                    // const latitude = 25.054656876401825;
-                    // const longitude = 121.51881076967368;
+                    const latitude = 25.054656876401825;
+                    const longitude = 121.51881076967368;
+                    currentLat = latitude;
+                    currentLng = longitude;
 
                     console.log('Current position:', { latitude, longitude });
 

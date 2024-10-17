@@ -125,6 +125,14 @@
                         material.className = 'card-material';
                         material.textContent = 'photo documentary / street photography';
 
+                        const coordinates = document.createElement('h5');
+                        material.className = 'card-coordinates';
+                        if (item.coordinates){
+                            material.textContent = `${item.coordinates}`;
+                        }else{
+                            material.textContent = '';
+                        }
+
 
                         const description = document.createElement('p');
                         description.className = 'card-description';
@@ -133,6 +141,7 @@
                         cardBody.appendChild(title);
                         cardBody.appendChild(year);
                         cardBody.appendChild(material);
+                        cardBody.appendChild(coordinates);
                         cardBody.appendChild(description);
                         card.appendChild(img);
                         card.appendChild(cardBody);
