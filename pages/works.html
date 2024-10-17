@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
     <link rel="icon" href="../src/assets/favicon.ico" type="image/x-icon">
+    <!-- Basic SEO -->
+    <meta name="description"
+        content="There Might Be No Works, is a work related to There Will Be Works. It's a web-based conceptual artwork that guides participants to drive through the city and produce street photography or photo-documentary style snapshots using machine learning.">
+    <meta name="keywords" content="art, urban society, street photography, contemporary art, modern art">
+    <meta name="author" content="HsienYU CHENG">
+    <meta name="robots" content="index, follow">
     <title>There Might be No Works</title>
     <style>
         #works-title {
@@ -127,9 +133,9 @@
 
                         const coordinates = document.createElement('h5');
                         coordinates.className = 'card-coordinates';
-                        if (item.coordinates){
+                        if (item.coordinates) {
                             coordinates.textContent = `${item.coordinates}`;
-                        }else{
+                        } else {
                             coordinates.textContent = '';
                         }
 
