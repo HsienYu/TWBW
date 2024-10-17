@@ -126,11 +126,11 @@
                         material.textContent = 'photo documentary / street photography';
 
                         const coordinates = document.createElement('h5');
-                        material.className = 'card-coordinates';
+                        coordinates.className = 'card-coordinates';
                         if (item.coordinates){
-                            material.textContent = `${item.coordinates}`;
+                            coordinates.textContent = `${item.coordinates}`;
                         }else{
-                            material.textContent = '';
+                            coordinates.textContent = '';
                         }
 
 
