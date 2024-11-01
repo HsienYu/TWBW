@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isNextLocation) {
                         console.log('Next location is true');
                         const distance = getDistanceFromLatLonInMeters(latitude, longitude, randomTarget.latitude, randomTarget.longitude);
-                        console.log(`Distance to target: ${distance} meters`);
+                        console.log(`Distance to ${randomTarget.message}: ${distance} meters`);
                         document.getElementById('distance').textContent = `${distance.toFixed(1)} meters`;
                         if (distance <= rangeInMeters) {
                             message = randomTarget.message;
