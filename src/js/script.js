@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
         var currentLat = 0;
         var currentLng = 0;
 
+        var isNextLocation = false;
+
+        var currentURL = window.location.href;
+
 
         function openCamera() {
             const constraints = {
@@ -148,18 +152,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     document.getElementById('coordinates').textContent = `${latitude} , ${longitude}`;
 
+                    //check if the user is going to the next location, parameter isNextLocation is set to true, https://therewillbeworks.com?nextLocation=true
+                    if (currentURL.includes('nextLocation=true')) {
+                        console.log('Set nextLocation to true');
+                        isNextLocation = true;
+                    }
+
+
                     let message = `Follow the coordinates ${randomTarget.latitude} , ${randomTarget.longitude} to reach the target location in range.`;
                     let foundTarget = false;
-                    for (const target of targets) {
-                        const distance = getDistanceFromLatLonInMeters(latitude, longitude, target.latitude, target.longitude);
-                        console.log(`Distance to ${target.message}: ${distance} meters`);
+
+                    if (isNextLocation) {
+                        console.log('Next location is true');
+                        const distance = getDistanceFromLatLonInMeters(latitude, longitude, randomTarget.latitude, randomTarget.longitude);
+                        console.log(`Distance to target: ${distance} meters`);
                         document.getElementById('distance').textContent = `${distance.toFixed(1)} meters`;
                         if (distance <= rangeInMeters) {
-                            message = target.message;
+                            message = randomTarget.message;
                             foundTarget = true;
                             document.getElementById('upload-button').style.display = 'block';
                             document.getElementById('message').style.fontSize = '5vw';
-                            break;
+                        }
+                    } else {
+                        console.log('First location to start');
+                        for (const target of targets) {
+                            const distance = getDistanceFromLatLonInMeters(latitude, longitude, target.latitude, target.longitude);
+                            console.log(`Distance to ${target.message}: ${distance} meters`);
+                            document.getElementById('distance').textContent = `${distance.toFixed(1)} meters`;
+                            if (distance <= rangeInMeters) {
+                                message = target.message;
+                                foundTarget = true;
+                                document.getElementById('upload-button').style.display = 'block';
+                                document.getElementById('message').style.fontSize = '5vw';
+                                break;
+                            }
                         }
                     }
                     if (!foundTarget) {
