@@ -139,12 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('taipei-time').textContent = `${taipeiTime}`;
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+                    // const latitude = position.coords.latitude;
+                    // const longitude = position.coords.longitude;
 
                     // For testing purposes, use fixed coordinates
-                    // const latitude = 25.054656876401825;
-                    // const longitude = 121.51881076967368;
+                    const latitude = 25.054656876401825;
+                    const longitude = 121.51881076967368;
                     currentLat = latitude;
                     currentLng = longitude;
 
