@@ -101,7 +101,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            fetch('https://f50ed5540635.ngrok.app/items/works')
+            fetch('https://0b98a06522fd.ngrok.app/items/works')
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('card-container');
@@ -115,7 +115,7 @@
 
                         const img = document.createElement('img');
                         console.log(item.photo);
-                        img.src = `https://f50ed5540635.ngrok.app/assets/${item.photo}`;
+                        img.src = `https://0b98a06522fd.ngrok.app/assets/${item.photo}`;
                         img.alt = 'Work image';
 
                         const cardBody = document.createElement('div');
