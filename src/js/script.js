@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('uploading-indicator').style.display = 'block';
 
 
-                fetch('https://4254656f25a3.ngrok.app/upload', {
+                fetch('https://data.therewillbeworks.com/gpt/upload', {
                     method: 'POST',
                     body: formData
                 })
