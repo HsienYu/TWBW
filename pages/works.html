@@ -101,7 +101,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            fetch('https://0b98a06522fd.ngrok.app/items/works', {
+            fetch('https://data.therewillbeworks.com/items/works', {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'include',
@@ -129,7 +129,7 @@
 
                         const img = document.createElement('img');
                         console.log(item.photo);
-                        img.src = `https://0b98a06522fd.ngrok.app/assets/${item.photo}`;
+                        img.src = `https://data.therewillbeworks.com/${item.photo}`;
                         img.alt = 'Work image';
 
                         const cardBody = document.createElement('div');
