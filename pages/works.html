@@ -63,6 +63,11 @@
             font-weight: bold;
         }
 
+        .card-coordinate-link {
+            color: inherit;
+            text-decoration: underline;
+        }
+
         .card-material {
             font-size: 1rem;
             font-weight: bold;
@@ -99,7 +104,9 @@
 
     <h1 id="works-title" class="display-1">There Might be No Works</h1>
 
-    <script>
+    <script type="module">
+        import { mapLinkForCoordinates } from './works-map-link.js';
+
         document.addEventListener('DOMContentLoaded', function () {
             fetch('https://data.therewillbeworks.com/items/works', {
                 method: 'GET',
@@ -147,12 +154,13 @@
                         material.className = 'card-material';
                         material.textContent = 'photo documentary / street photography';
 
-                        const coordinates = document.createElement('h5');
-                        coordinates.className = 'card-coordinates';
-                        if (item.coordinates) {
-                            coordinates.textContent = `${item.coordinates}`;
-                        } else {
-                            coordinates.textContent = '';
+                        const mapLink = mapLinkForCoordinates(item.coordinates);
+                        if (mapLink) {
+                            const coordinateLink = document.createElement('a');
+                            coordinateLink.className = 'card-coordinate-link';
+                            coordinateLink.href = mapLink.href;
+                            coordinateLink.textContent = mapLink.label;
+                            year.append(' ', coordinateLink);
                         }
 
 
@@ -163,7 +171,6 @@
                         cardBody.appendChild(title);
                         cardBody.appendChild(year);
                         cardBody.appendChild(material);
-                        cardBody.appendChild(coordinates);
                         cardBody.appendChild(description);
                         card.appendChild(img);
                         card.appendChild(cardBody);
