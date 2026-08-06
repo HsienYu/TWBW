@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cameraStream = null;
     let targetListLoaded = false;
     let targetListRequestInFlight = false;
+    let fallbackToken = null;
 
     function sessionId() {
         let id = localStorage.getItem(sessionStorageKey);
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ latitude: currentLat, longitude: currentLng, sessionId: sessionId() })
             });
             availableTargets = data.targets;
+            fallbackToken = data.journeyType === 'fallback' ? data.fallbackToken : null;
             selectedTarget = null;
             hasReachedSelectedTarget = false;
             targetListLoaded = true;
@@ -86,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 longitude: currentLng,
                 accuracy: currentAccuracy,
                 sessionId: sessionId(),
-                targetId: selectedTarget.id
+                targetId: selectedTarget.id,
+                fallbackToken
             })
         });
         setMessage(data.message);
@@ -145,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('accuracy', String(currentAccuracy));
         formData.append('targetId', selectedTarget.id);
         formData.append('sessionId', sessionId());
+        if (fallbackToken) formData.append('fallbackToken', fallbackToken);
         document.getElementById('uploading-indicator').style.display = 'block';
         try {
             await request('/upload', { method: 'POST', body: formData });
