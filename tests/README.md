@@ -33,6 +33,8 @@ The test intercepts all non-local traffic, replaces the production HTTPS redirec
 
 Acceptance includes navigation, dynamic language switching without camera restart or duplicate API calls, permissions and failure states, original gallery content preservation, relative navigation links, and no horizontal overflow at a 390px viewport.
 
+Run `browser/language-alignment.js` through the same Playwright tool and loopback server for the language-control layout regression. Unlike the synthetic journey test, it loads the real Bootstrap 4.5.2 stylesheet and requires its default 8px label margin to be present. It checks label/select vertical centers within 0.5px and no horizontal overflow at 320px, 390px and 768px, on both pages and in both languages. Output is saved to `/tmp/twbw-compass-verification/language-alignment.log`. This catches Bootstrap Reboot label spacing that a stubbed CDN stylesheet would miss.
+
 ## Manual acceptance
 `manual/compass.md` defines HTTPS tests for actual iOS Safari and Android Chrome. Record device/browser versions, calibration error, latency, recovery and anonymized evidence. This remains pending until physical phones have been tested.
 

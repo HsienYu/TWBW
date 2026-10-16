@@ -41,3 +41,16 @@ Pre-release and live evidence is saved under `/tmp/twbw-compass-verification/`:
 - `live-verification.json`: live HTTPS status and content hash comparison, without user data.
 
 The execution results are also recorded in the tool-native implementation plan. Physical iOS/Android evidence remains separate in `compass.md`; publication does not imply sensor acceptance.
+
+## Follow-up: language alignment
+Prepared 2026-10-16 16:22:56 CEST. The user separately approved commit/push and publication of the layout correction, then requested the next work items. This approval is specific to this CSS correction; it does not authorize unrelated changes. The previously disclosed lack of a reliable Pages active-visitor signal remains; no idle-visitor claim is made.
+
+Use the same rollout and non-destructive rollback steps above with these replacement gates:
+- Baseline main and published build: `35f800cf2440a5e5485d56d0d574febba81cf93e`.
+- New backup ref: `backup/pre-alignment-20261016`, pointing to that baseline.
+- Scope: clear the language label margin, add the browser regression test, and update test/runbook documentation. No JavaScript application behavior or backend changes.
+- Tests: 22 Node tests pass; 12 browser combinations pass (both pages, English/Traditional Chinese, widths 320/390/768). Real Bootstrap CSS must be loaded. Before the fix the label center was 4px above the select; after the fix the expected difference is 0px, with tolerance 0.5px.
+- Live gate: the published CSS must match the committed file and the real HTTPS interface must have label/select center difference within 0.5px. Do not submit location or photos during verification.
+- Evidence: `alignment-full-suite.log`, `language-alignment-red.log`, `language-alignment.log`, `alignment-secrets.log`, `alignment-deployment.json` and `alignment-live.json` under `/tmp/twbw-compass-verification/`.
+
+Remaining acceptance is physical-phone confirmation, not another feature rollout: recheck the visible language row, then record device/browser details and compass behavior from `compass.md`. The user's initial report that navigation appears usable is preliminary feedback, not evidence that every manual case passed.
