@@ -1,5 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
-    if (!isMobileDevice()) return;
+import { createI18n, bindLanguageUI } from './i18n.js';
+import { createCompass } from './compass.js';
+import { validCoordinates } from './navigation.js';
+
+const i18n = createI18n({ window });
+bindLanguageUI(i18n, document);
+const mobile = /Mobi|Android/i.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+if (!mobile) {
+    document.getElementById('landing-page').hidden = true;
+    document.getElementById('mobile-notice').hidden = false;
+} else {
+    startJourney();
+}
+function startJourney() {
 
     const API_BASE = 'https://data.therewillbeworks.com/gpt';
     const sessionStorageKey = 'twbw-session-id';
@@ -14,6 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetListLoaded = false;
     let targetListRequestInFlight = false;
     let fallbackToken = null;
+    let currentPosition = null;
+    let positionInFlight = false;
+    let messageKey = 'locationRequired';
+    let photoAction = 'takePhoto';
+    let compassState = { status: 'location', bearing: null, rotation: null };
+    let interval = null;
+    let previewUrl = null;
+    const directions = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
+    const compass = createCompass({ window, onChange(state) { compassState = state; render(); } });
 
     function sessionId() {
         let id = localStorage.getItem(sessionStorageKey);
@@ -31,8 +53,38 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
-    function setMessage(message) {
-        document.getElementById('message').textContent = message;
+    function setMessage(key) {
+        messageKey = key;
+        render();
+    }
+
+    function render() {
+        document.getElementById('message').textContent = i18n.t(messageKey);
+        document.getElementById('taipei-time').textContent = i18n.date(Date.now());
+        document.getElementById('upload-button').textContent = i18n.t(photoAction);
+        const fresh = currentPosition && Date.now() - currentPosition.timestamp <= 15000;
+        document.getElementById('distance').textContent = fresh && selectedTarget
+            ? i18n.t('distance', { distance: i18n.number(distanceInMeters(currentPosition, selectedTarget), { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })
+            : i18n.t('locationRequired');
+        document.getElementById('coordinates').textContent = selectedTarget
+            ? i18n.t('coordinates', { latitude: selectedTarget.latitude, longitude: selectedTarget.longitude })
+            : i18n.t('coordinatesUnavailable');
+        const { status, bearing, rotation, enabled, permissionPending } = compassState;
+        const arrow = document.getElementById('compass-arrow');
+        arrow.toggleAttribute('hidden', rotation === null);
+        if (rotation !== null) arrow.style.transform = `rotate(${rotation}deg)`;
+        document.getElementById('compass-status').textContent = i18n.t(`compass_${status}`);
+        document.getElementById('bearing').textContent = bearing === null ? '' : i18n.t('bearing', {
+            direction: i18n.t(directions[Math.round(bearing / 45) % 8]),
+            degrees: i18n.number(Math.round(bearing) % 360)
+        });
+        const enableButton = document.getElementById('enable-compass');
+        enableButton.hidden = Boolean(enabled) || hasReachedSelectedTarget;
+        enableButton.disabled = Boolean(permissionPending);
+    }
+
+    function updateGuidance() {
+        compass.update(currentPosition, selectedTarget, hasReachedSelectedTarget);
     }
 
     function distanceInMeters(first, second) {
@@ -46,8 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setDistance(target) {
         const distance = distanceInMeters({ latitude: currentLat, longitude: currentLng }, target);
-        document.getElementById('distance').textContent = `${distance.toFixed(1)} meters to the next location`;
-        document.getElementById('coordinates').textContent = `${target.latitude} , ${target.longitude}`;
+        updateGuidance();
         return distance;
     }
 
@@ -55,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!availableTargets.length || hasReachedSelectedTarget) return;
         selectedTarget = [...availableTargets]
             .sort((first, second) => distanceInMeters({ latitude: currentLat, longitude: currentLng }, first) - distanceInMeters({ latitude: currentLat, longitude: currentLng }, second))[0];
-        setMessage(`Follow the coordinates ${selectedTarget.latitude} , ${selectedTarget.longitude} to reach the target location in range.`);
+        setMessage('follow');
         setDistance(selectedTarget);
     }
 
@@ -68,12 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ latitude: currentLat, longitude: currentLng, sessionId: sessionId() })
             });
+            if (!Array.isArray(data.targets) || data.targets.some(target => !validCoordinates(target))) {
+                throw new Error('Invalid target coordinates');
+            }
             availableTargets = data.targets;
             fallbackToken = data.journeyType === 'fallback' ? data.fallbackToken : null;
             selectedTarget = null;
             hasReachedSelectedTarget = false;
             targetListLoaded = true;
             chooseNearestCachedTarget();
+            if (!availableTargets.length) setMessage('noTargets');
+            updateGuidance();
         } finally {
             targetListRequestInFlight = false;
         }
@@ -92,13 +148,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 fallbackToken
             })
         });
-        setMessage(data.message);
+        document.getElementById('server-message').textContent = typeof data.message === 'string' ? data.message : '';
+        document.getElementById('server-instructions').hidden = !data.message;
+        setMessage('compass_arrived');
         hasReachedSelectedTarget = true;
+        updateGuidance();
         document.getElementById('upload-button').style.display = 'block';
         document.getElementById('message').style.fontSize = '5vw';
     }
 
     function openCamera() {
+        if (!navigator.mediaDevices?.getUserMedia) {
+            alert(i18n.t('cameraError'));
+            return;
+        }
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
             .then((stream) => {
                 cameraStream = stream;
@@ -109,7 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 video.play();
 
                 const takePhotoButton = document.getElementById('upload-button');
-                takePhotoButton.textContent = 'Take Photo';
+                photoAction = 'takePhoto';
+                render();
                 takePhotoButton.onclick = () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = video.videoWidth;
@@ -119,10 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => { document.getElementById('flash').style.opacity = '0'; }, 100);
                     canvas.toBlob((blob) => {
                         photoBlob = blob;
-                        takePhotoButton.textContent = 'Upload Image';
+                        photoAction = 'uploadImage';
+                        render();
                         takePhotoButton.onclick = uploadPhoto;
                         const image = document.createElement('img');
-                        image.src = URL.createObjectURL(blob);
+                        previewUrl = URL.createObjectURL(blob);
+                        image.src = previewUrl;
+                        image.alt = i18n.t('workImage');
                         image.style.width = '80%';
                         image.style.borderRadius = '8px';
                         image.onclick = openCamera;
@@ -134,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 videoContainer.style.display = 'block';
             })
             .catch((error) => {
-                console.error('Error accessing camera:', error);
-                alert('Failed to access camera. Please check camera permission.');
+                console.error('Camera access failed:', error.name);
+                alert(i18n.t('cameraError'));
             });
     }
 
@@ -152,21 +220,34 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('uploading-indicator').style.display = 'block';
         try {
             await request('/upload', { method: 'POST', body: formData });
-            window.location.href = 'https://therewillbeworks.com/pages/works.html';
+            window.location.href = new URL('./pages/works.html', window.location.href).href;
         } catch (error) {
-            console.error('Upload failed:', error);
-            alert(error.message || 'Failed to upload photo.');
+            console.error('Photo upload failed.');
+            alert(i18n.t('uploadError'));
         } finally {
             document.getElementById('uploading-indicator').style.display = 'none';
         }
     }
 
     function updatePosition() {
-        document.getElementById('taipei-time').textContent = new Date().toLocaleString();
+        if (positionInFlight || document.hidden) return;
+        if (!navigator.geolocation) {
+            setMessage('locationUnavailable');
+            return;
+        }
+        positionInFlight = true;
         navigator.geolocation.getCurrentPosition(async (position) => {
+            if (!validCoordinates(position.coords)) {
+                positionInFlight = false;
+                currentPosition = null;
+                compass.invalidatePosition();
+                setMessage('locationUnavailable');
+                return;
+            }
             currentLat = position.coords.latitude;
             currentLng = position.coords.longitude;
             currentAccuracy = position.coords.accuracy;
+            currentPosition = { latitude: currentLat, longitude: currentLng, timestamp: position.timestamp };
             try {
                 if (!targetListLoaded) await loadTargetList();
                 chooseNearestCachedTarget();
@@ -176,16 +257,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 document.getElementById('upload-button').style.display = 'none';
-                setMessage(error.message || 'Unable to load target locations.');
+                console.error('Target request failed.');
+                setMessage('targetError');
+            } finally {
+                positionInFlight = false;
+                updateGuidance();
             }
         }, (error) => {
-            console.error('Error getting location:', error);
-            setMessage('Location is required to find target locations.');
+            positionInFlight = false;
+            currentPosition = null;
+            compass.invalidatePosition();
+            console.warn('Location unavailable:', error.code);
+            setMessage('locationUnavailable');
         }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
     }
 
-    window.addEventListener('beforeunload', () => cameraStream?.getTracks().forEach((track) => track.stop()));
+    window.addEventListener('pagehide', (event) => {
+        cameraStream?.getTracks().forEach((track) => track.stop());
+        cameraStream = null;
+        currentPosition = null;
+        compass.invalidatePosition();
+        if (!event.persisted) {
+            clearInterval(interval);
+            compass.destroy();
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        }
+    });
+    i18n.subscribe(() => {
+        render();
+        const preview = document.querySelector('#video-container img');
+        if (preview) preview.alt = i18n.t('workImage');
+    });
+    document.getElementById('enable-compass').onclick = () => compass.enable();
     document.getElementById('upload-button').onclick = openCamera;
-    updatePosition();
-    setInterval(updatePosition, 5000);
-});
+    document.getElementById('start-button').onclick = () => {
+        document.getElementById('landing-page').hidden = true;
+        document.getElementById('main-content').style.display = 'block';
+        if (interval === null) {
+            updatePosition();
+            interval = setInterval(updatePosition, 5000);
+        }
+    };
+    render();
+}

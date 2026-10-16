@@ -14,6 +14,10 @@
     <meta name="robots" content="index, follow">
     <title>There Might be No Works</title>
     <style>
+        body { margin: 0; padding: 16px 12px 90px; font-family: system-ui, sans-serif; }
+        .language-control { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+        .language-control select { min-height: 44px; font: inherit; }
+        [hidden] { display: none !important; }
         #works-title {
             position: fixed;
             top: 40%;
@@ -22,7 +26,9 @@
             text-align: center;
             color: transparent;
             text-decoration: line-through;
-            font-size: 10em;
+            font-size: clamp(2rem, 9vw, 10em);
+            pointer-events: none;
+            z-index: -1;
             -webkit-text-stroke: 0.5px black;
         }
 
@@ -100,12 +106,29 @@
 </head>
 
 <body>
+    <nav class="language-control">
+        <label for="language-select" data-i18n="language">Language</label>
+        <select id="language-select">
+            <option value="auto" data-i18n="automatic">Automatic</option>
+            <option value="en" lang="en">English</option>
+            <option value="zh-TW" lang="zh-TW">繁體中文</option>
+        </select>
+    </nav>
+    <p id="gallery-status" role="status" data-i18n="galleryLoading">Loading works…</p>
     <div class="card-container" id="card-container"></div>
+    <a href="../" class="back-button" data-i18n="nextLocation">Start to Next Location</a>
 
     <h1 id="works-title" class="display-1">There Might be No Works</h1>
 
     <script type="module">
         import { mapLinkForCoordinates } from './works-map-link.js';
+        import { createI18n, bindLanguageUI } from '../src/js/i18n.js';
+
+        const i18n = createI18n({ window });
+        bindLanguageUI(i18n, document);
+        const translations = [];
+        i18n.subscribe(() => translations.forEach(render => render()));
+        const status = document.getElementById('gallery-status');
 
         document.addEventListener('DOMContentLoaded', function () {
             fetch('https://data.therewillbeworks.com/items/works', {
@@ -126,6 +149,9 @@
                 })
                 .then(data => {
                     const container = document.getElementById('card-container');
+                    status.dataset.i18n = data.data.length ? '' : 'galleryEmpty';
+                    status.textContent = data.data.length ? '' : i18n.t('galleryEmpty');
+                    status.hidden = data.data.length > 0;
 
                     // Sort data in descending order based on date_created
                     data.data.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
@@ -135,24 +161,30 @@
                         card.className = 'card';
 
                         const img = document.createElement('img');
-                        console.log(item.photo);
                         img.src = `https://data.therewillbeworks.com/assets/${item.photo}`;
-                        img.alt = 'Work image';
 
                         const cardBody = document.createElement('div');
                         cardBody.className = 'card-body';
 
                         const title = document.createElement('h5');
                         title.className = 'card-title';
-                        title.textContent = `photography #${item.id}`;
 
                         const year = document.createElement('h5');
                         year.className = 'card-year';
-                        year.textContent = `${formatDate(item.date_created)}`;
+                        const dateLabel = document.createElement('span');
+                        year.appendChild(dateLabel);
 
                         const material = document.createElement('h5');
                         material.className = 'card-material';
-                        material.textContent = 'photo documentary / street photography';
+                        const translate = () => {
+                            img.alt = i18n.t('workImage');
+                            title.textContent = i18n.t('photography', { id: item.id });
+                            const timestamp = Date.parse(item.date_created);
+                            dateLabel.textContent = Number.isFinite(timestamp) ? i18n.date(timestamp) : '';
+                            material.textContent = i18n.t('material');
+                        };
+                        translations.push(translate);
+                        translate();
 
                         const mapLink = mapLinkForCoordinates(item.coordinates);
                         if (mapLink) {
@@ -176,26 +208,14 @@
                         card.appendChild(cardBody);
                         container.appendChild(card);
                     });
-                    // Create and append the back button
-                    const backButton = document.createElement('a');
-                    backButton.href = 'https://therewillbeworks.com';
-                    backButton.className = 'back-button';
-                    backButton.textContent = 'Start to Next Location.';
-                    container.appendChild(backButton);
                 })
-                .catch(error => console.error('Error fetching data:', error));
+                .catch(() => {
+                    console.error('Gallery request failed.');
+                    status.dataset.i18n = 'galleryError';
+                    status.textContent = i18n.t('galleryError');
+                    status.hidden = false;
+                });
         });
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-
-            return `${year}           ${month}/${day} ${hours}:${minutes}`;
-        }
     </script>
 </body>
 

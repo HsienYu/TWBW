@@ -1,11 +1,98 @@
 body,
 html {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  width: 100%;
+  font-family: system-ui, sans-serif;
+  padding: 16px 12px 40px;
+  box-sizing: border-box;
+}
+
+.language-control {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.language-control select {
+  min-height: 44px;
+  font: inherit;
+  max-width: 100%;
+}
+
+#main-content, #landing-page {
+  width: 100%;
+  max-width: 680px;
+}
+
+#compass {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+#compass h2, #server-instructions h2 {
+  font-size: 1.1rem;
+}
+
+.compass-dial {
+  width: 180px;
+  height: 180px;
+  border: 1px solid #c7c7c7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px auto;
+}
+
+#compass-arrow {
+  color: #d80000;
+  /* No rotation transition: crossing north must not spin the long way around. */
+}
+
+#bearing {
+  color: #b00000;
+  font-variant-numeric: tabular-nums;
+}
+
+.compass-hint {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 12px;
+}
+
+button.btn {
+  background: #d80000;
+  border: 1px solid #d80000;
+  color: white;
+  border-radius: 4px;
+  min-height: 44px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+#server-instructions {
+  width: 100%;
+  white-space: pre-wrap;
 }
 
 #landing-page {
@@ -88,8 +175,7 @@ html {
   font-size: 16px;
   margin-top: 10px;
   text-align: center;
-  position: fixed;
-  bottom: 0;
+  overflow-wrap: anywhere;
   color: red;
 }
 #distance {
@@ -102,8 +188,7 @@ html {
   font-size: 16px;
   margin-top: 10px;
   text-align: center;
-  position: fixed;
-  top: 0;
+  margin-bottom: 12px;
 }
 
 video {
@@ -140,25 +225,10 @@ video {
   width: 100%; /* Ensure the container takes full width */
 }
 
-.zh-tw .instruction-en,
-.zh-tw .instruction-zh,
-.instruction-en,
-.instruction-zh {
+#instruction-container p {
   width: 100%;
   text-align: left;
 }
-
-.zh-tw .instruction-en {
-  display: none;
-}
-.zh-tw .instruction-zh {
-  display: block;
-  line-height: normal;
-}
-.instruction-zh {
-  display: none;
-}
-
 
 
 #uploading-indicator {

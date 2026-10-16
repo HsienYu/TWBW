@@ -18,83 +18,66 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="./src/css/style.css">
-  <!-- Bootstrap JS and dependencies -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- Custom JS -->
-  <script>
-    function isMobileDevice() {
-      return /Mobi|Android/i.test(navigator.userAgent);
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      if (!isMobileDevice()) {
-        document.body.innerHTML = '<div class="container text-center"><h1 class="display-4">This work is only available for mobile devices.</h1></div>';
-      } else {
-        document.getElementById('start-button').addEventListener('click', function () {
-          document.getElementById('landing-page').style.display = 'none';
-          document.getElementById('main-content').style.display = 'block';
-        });
-        document.getElementById('switch-language').addEventListener('click', function () {
-          document.body.classList.toggle('zh-tw');
-          this.textContent = document.body.classList.contains('zh-tw') ? 'English' : '繁體中文';
-        });
-      }
-    });
-
-  </script>
+  <script src="./src/js/redirect.js"></script>
+  <script type="module" src="./src/js/script.js"></script>
 </head>
 
 <body>
+  <nav class="language-control">
+    <label for="language-select" data-i18n="language">Language</label>
+    <select id="language-select">
+      <option value="auto" data-i18n="automatic">Automatic</option>
+      <option value="en" lang="en">English</option>
+      <option value="zh-TW" lang="zh-TW">繁體中文</option>
+    </select>
+  </nav>
+  <p id="mobile-notice" data-i18n="mobileOnly" hidden>This work is only available on mobile devices.</p>
   <div id="landing-page" class="container text-center">
     <h1 class="display-1">There Will Be Works</h1>
     <div class="container text-left">
-      <h2>Instructions</h2>
+      <h2 data-i18n="instructions">Instructions</h2>
       <div id="instruction-container" class="lead">
-        <div class="instruction-en">
-          <p>Make sure device allow and enable location services.</p>
-          <p>Follow the GPS coordinates to reach the first location.</p>
-          <p>When reaching the target location in range, you will receive further instructions.</p>
-          <p>You will need to take a photo of the target location to proceed.</p>
-          <p>The photo will be the work you think it's a work.</p>
-          <p>The target coordinates will be updated every 2 weeks until the end of the exhibition.</p>
-          <p>Complete the instruction to proceed to the next location.</p>
-          <p>You will see the work via the redirect web page.</p>
-          <p>This work is only available for mobile devices</p>
-        </div>
-        <div class="instruction-zh">
-          <p>確保設備允許並啟用定位服務。</p>
-          <p>按照GPS坐標到達第一個位置。</p>
-          <p>到達目標位置後，您將收到進一步的指示。</p>
-          <p>您需要拍攝目標位置的照片以繼續。</p>
-          <p>照片將是您認為是作品的作品。</p>
-          <p>目標坐標將每兩週更新一次，直到展覽結束。</p>
-          <p>完成指示以繼續到下一個位置。</p>
-          <p>您將通過重定向網頁看到作品。</p>
-          <p>此作品僅適用於行動裝置設備</p>
-        </div>
+        <p data-i18n="instruction1">Allow and enable location services on your device.</p>
+        <p data-i18n="instruction2">Follow the direction and distance to the first location.</p>
+        <p data-i18n="instruction3">When you reach the target area, you will receive further instructions.</p>
+        <p data-i18n="instruction4">Take a photo of what you think is the work to continue.</p>
+        <p data-i18n="instruction5">Target coordinates are updated every two weeks until the end of the exhibition.</p>
+        <p data-i18n="instruction6">Complete the instructions to proceed to the next location.</p>
+        <p data-i18n="instruction7">After uploading, you will see the works on the gallery page.</p>
+        <p data-i18n="instruction8">This work is only available on mobile devices.</p>
       </div>
-      <button id="start-button" class="btn btn-primary">Start</button>
-      <button id="switch-language" class="btn btn-primary">繁體中文</button>
+      <button id="start-button" class="btn btn-primary" data-i18n="start">Start</button>
 
     </div>
   </div>
   <div id="main-content" class="container text-center" style="display: none;">
     <div id="flash"></div>
-    <!-- <div id="gps-instructions"></div> -->
     <div id="message-container" class="container text-center">
       <div id="taipei-time" class="lead">N/A</div>
-      <h1 id="message" class="display-4">Follow the coordinates to reach the target location in range.</h1>
-      <div id="distance" class="lead">Pls. make device allow and enable location services.</div>
-      <div id="coordinates" class="lead">GPS location is not available.</div>
+      <h1 id="message" class="display-4"></h1>
+      <div id="distance" class="lead"></div>
+      <section id="compass" aria-labelledby="compass-title">
+        <h2 id="compass-title" data-i18n="compassTitle">Direction to the location</h2>
+        <div class="compass-dial" aria-hidden="true">
+          <svg id="compass-arrow" viewBox="0 0 100 100" width="140" height="140" hidden>
+            <path d="M50 6 L83 84 L50 65 L17 84 Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <p id="bearing"></p>
+        <p id="compass-status" role="status"></p>
+        <button id="enable-compass" class="btn btn-primary" data-i18n="enableCompass">Enable direction guidance</button>
+        <p class="compass-hint" data-i18n="compassHint">Hold your phone flat, screen up. Straight-line guidance only—not a walking route. Watch your surroundings.</p>
+      </section>
+      <div id="server-instructions" hidden>
+        <h2 data-i18n="serverInstruction">Location instructions (original language)</h2>
+        <p id="server-message"></p>
+      </div>
+      <div id="coordinates" class="lead"></div>
       <div id="video-container" class="my-3">
         <video id="video" autoplay playsinline muted class="img-fluid"></video>
       </div>
       <button id="upload-button" class="btn btn-primary">Take a Photo</button>
-      <div id="uploading-indicator" style="display: none;">Uploading...</div>
-      <script src="./src/js/redirect.js"></script>
-      <script src="./src/js/script.js"></script>
+      <div id="uploading-indicator" style="display: none;" role="status" data-i18n="uploading">Uploading…</div>
     </div>
   </div>
 </body>
