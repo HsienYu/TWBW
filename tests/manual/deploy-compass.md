@@ -54,3 +54,21 @@ Use the same rollout and non-destructive rollback steps above with these replace
 - Evidence: `alignment-full-suite.log`, `language-alignment-red.log`, `language-alignment.log`, `alignment-secrets.log`, `alignment-deployment.json` and `alignment-live.json` under `/tmp/twbw-compass-verification/`.
 
 Remaining acceptance is physical-phone confirmation, not another feature rollout: recheck the visible language row, then record device/browser details and compass behavior from `compass.md`. The user's initial report that navigation appears usable is preliminary feedback, not evidence that every manual case passed.
+
+## Follow-up: desktop QR code
+
+Prepared 2026-10-26 17:51:53 CET. The user authorized commit, merge and push for this change. Workflow: deployment verification. The separate current-run activity-gate exception must be explicitly accepted before pushing; no standing exception is assumed.
+
+Stop at the first mismatch. Expected baseline main and published build: `68b387eabcbf5f840c6f998d0f1f5390a7398e37`. Expected Pages source: `main`, `/`, legacy branch build. Scope is the supplied QR PNG, desktop notice, translations, layout, tests and documentation; no backend or data changes.
+
+1. `npm test` must pass 24 tests with 0 failures and 0 skipped. `git diff --check` must exit 0; `gitleaks dir . --redact --no-banner` must report no leaks. Review the entire diff, including new files.
+2. `git ls-remote --heads origin refs/heads/main` and `gh api repos/HsienYu/TWBW/pages/builds/latest` must match the baseline; `gh api repos/HsienYu/TWBW/pages` must match the source above. All commands are installed and were executed successfully before this run.
+3. Commit only reviewed change files on `feat/desktop-qr`, then fast-forward local main with `git merge --ff-only feat/desktop-qr`. Untracked `.orca/` and local `PLAN.md` remain outside the release.
+4. Before any production push, require the user's explicit current-run exception to the unavailable Pages visitor signal. Without that response, abort the push and leave the release local. Create `backup/pre-desktop-qr-20261026` at the baseline; push this backup and verify its remote SHA.
+5. Recheck remote main equals the baseline; use a normal fast-forward `git push origin main:main`. GitHub Pages creates a versioned deployment artifact and publishes it through its managed deployment. No history rewrite or hook bypass.
+6. `gh run list --repo HsienYu/TWBW --limit 5 --json databaseId,headSha,status,conclusion` identifies the release run; `gh run watch <run-id> --repo HsienYu/TWBW --exit-status` must succeed. Latest Pages build must report `built`, the release SHA, and no error.
+7. Check real HTTPS HTML and QR/CSS/locales resources against local committed bytes (allow Pages-generated HTML metadata). In Chromium, verify desktop notice visible, PNG loaded at 296px, both language prompts correct, no overflow at 320/1280px, and phone landing visible with desktop notice hidden. Block backend requests; do not click Start or send location/photos. Save screenshots and logs under `/tmp/twbw-qr-verification/`.
+
+Rollback: keep the remote backup until user acceptance. For a confirmed regression, create an isolated rollback branch/worktree at the release SHA, revert the single release commit normally, run all tests and review the diff, then obtain authorization for that rollback run and push normally. Verify Pages deployment and live resources again. Stop if remote main moved; never reset or force-push.
+
+Evidence: `/tmp/twbw-qr-prepublish-tests.log` (full Node output), `/tmp/twbw-qr-secrets.log` (redacted scan), and local browser screenshots/results documented in the root handoff. Publication results will be recorded in the local `PLAN.md` Handoff Log after live verification.

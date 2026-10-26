@@ -37,6 +37,21 @@ body {
   margin: 0;
 }
 
+#mobile-notice {
+  width: 100%;
+  max-width: 480px;
+  margin: 24px auto;
+  text-align: center;
+}
+
+#mobile-notice img {
+  display: block;
+  width: 296px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 16px;
+}
+
 #main-content, #landing-page {
   width: 100%;
   max-width: 680px;

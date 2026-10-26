@@ -26,6 +26,8 @@ The language selector is available on the landing, journey and gallery pages. Ma
 
 Translations are in `src/js/locales.js`. Add matching keys and placeholders to each dictionary, then extend the locale allowlist and selector for additional languages. Artwork names, descriptions and backend location instructions retain their original content; backend instructions are labeled accordingly.
 
+Desktop visitors see the mobile-only notice with a QR code linking to https://therewillbeworks.com/ and localized scanning instructions. The supplied QR image is stored locally; mobile visitors retain the journey entry.
+
 ## Development tests
 Use a maintained Node.js release with `node:test` support (verified with Node.js v26.7.0):
 

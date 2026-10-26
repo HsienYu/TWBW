@@ -13,6 +13,8 @@ npm test > /tmp/twbw-compass-verification/full-suite.log 2>&1
 Check the command's exit status and read the complete output, including failures.
 
 ## Coverage
+
+- `mobile-notice.test.js`: desktop QR markup and asset, English/Traditional Chinese scan instructions, desktop notice visibility and preserved phone/touch-iPad entry.
 - `works-map-link.test.js`: existing coordinate-link behavior, absent data and malformed/out-of-range input.
 - `navigation.test.js`: four directions, date-line crossing, invalid/coincident/antipodal coordinates, signed angle wrapping, absolute heading, Safari heading, screen rotation and posture rejection.
 - `compass.test.js`: click-driven permission, denied/unsupported/error paths, expiry, background reset, relative-event rejection, target change, arrival and cleanup.
@@ -34,6 +36,14 @@ The test intercepts all non-local traffic, replaces the production HTTPS redirec
 Acceptance includes navigation, dynamic language switching without camera restart or duplicate API calls, permissions and failure states, original gallery content preservation, relative navigation links, and no horizontal overflow at a 390px viewport.
 
 Run `browser/language-alignment.js` through the same Playwright tool and loopback server for the language-control layout regression. Unlike the synthetic journey test, it loads the real Bootstrap 4.5.2 stylesheet and requires its default 8px label margin to be present. It checks label/select vertical centers within 0.5px and no horizontal overflow at 320px, 390px and 768px, on both pages and in both languages. Output is saved to `/tmp/twbw-compass-verification/language-alignment.log`. This catches Bootstrap Reboot label spacing that a stubbed CDN stylesheet would miss.
+
+For the desktop QR regression, start the same loopback server and run:
+
+```sh
+PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tests/browser/mobile-notice.js
+```
+
+This uses installed Chromium at `/usr/bin/chromium`, verifies root/project-prefix URLs at 320px and 1280px in both languages, checks image loading and overflow, and confirms the phone entry. Only the HTTP-to-HTTPS redirect is bypassed for loopback testing. Screenshots go to `/tmp/twbw-qr-verification/`. Decode the supplied asset with `zbarimg --quiet src/assets/therewillbeworks_qrcode.png`; it must resolve to `https://therewillbeworks.com`.
 
 ## Manual acceptance
 `manual/compass.md` defines HTTPS tests for actual iOS Safari and Android Chrome. Record device/browser versions, calibration error, latency, recovery and anonymized evidence. This remains pending until physical phones have been tested.
